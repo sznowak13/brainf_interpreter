@@ -18,10 +18,22 @@ class BrainFuckInterpreter:
         self.size = table_size
         self.table = [0 for _ in range(table_size)]
         self.index = 0
+        self._code = None
+        self._output = []
         self._file_path = None
         self._loop_stack = []
         self._code_index = 0
         self._print_to_stdout = True
+        self._cmd_map = {
+            ">": self._increase_pointer_cell,
+            "<": self._decrease_pointer_cell,
+            "+": self._increase_pointer_value,
+            "-": self._decrease_pointer_value,
+            ",": self._get_value,
+            ".": self._print_value,
+            "[": self._start_loop,
+            "]": self._end_loop,
+        }
 
     def disable_stdout(self):
         self._print_to_stdout = False
@@ -67,35 +79,40 @@ class BrainFuckInterpreter:
             print(char, end='', flush=True)
         return char
 
+    def _print_value(self):
+        self._output.append(self._print_char())
+
     def _get_value(self):
         inpt = get_input()
-        self.current_value = ord(inpt)
+        try:
+            self.current_value = ord(inpt)
+        except TypeError:
+            print("\nWARNING :: This command accepts only single characters, not strings. Adding only the first character.")
+            self.current_value = ord(inpt[0])
+
+    def _start_loop(self):
+        if self.current_value:
+            self._loop_stack.append(self._code_index)
+        else:
+            self._code_index += get_corresponding_closing_bracket_index(self._code[self._code_index:])
+
+    def _end_loop(self):
+        self._code_index = self._loop_stack.pop() - 1
+
+    def _execute(self, cmd):
+        cmd()
 
     def interpret(self, bf_text: str):
-        printed_chars = []
-        while self._code_index < len(bf_text):
-            ch = bf_text[self._code_index]
-            if ch == '>':
-                self._increase_pointer_cell()
-            elif ch == '<':
-                self._decrease_pointer_cell()
-            elif ch == '+':
-                self._increase_pointer_value()
-            elif ch == '-':
-                self._decrease_pointer_value()
-            elif ch == '.':
-                printed_chars.append(self._print_char())
-            elif ch == ',':
-                self._get_value()
-            elif ch == '[':
-                if self.current_value:
-                    self._loop_stack.append(self._code_index)
-                else:
-                    self._code_index += get_corresponding_closing_bracket_index(bf_text[self._code_index:])
-            elif ch == ']':
-                self._code_index = self._loop_stack.pop() - 1
+        self._code = bf_text
+        while self._code_index < len(self._code):
+            ch = self._code[self._code_index]
+            if ch in self._cmd_map:
+                self._execute(self._cmd_map[ch])
             self._code_index += 1
         self._code_index = 0
+        self._code = None
+        printed_chars = [*self._output]
+        self._output = []
         return ''.join(printed_chars)
 
     def interpret_file(self, file_path):

@@ -68,7 +68,7 @@ def test_interpreter_can_increment_multiple_cells(interpreter):
     assert interpreter.current_value == 7
     interpreter.interpret('>+++')
     assert interpreter.current_value == 8
-    assert interpreter.table[:2] == [7, 8]  # First to elements of the table
+    assert interpreter.table[:2] == [7, 8]  # First two elements of the table
 
 
 def test_interpreter_can_decrement_multiple_cells(interpreter):
@@ -81,7 +81,7 @@ def test_interpreter_can_decrement_multiple_cells(interpreter):
     assert interpreter.current_value == -5
     interpreter.interpret('>-')
     assert interpreter.current_value == -3
-    assert interpreter.table[:2] == [-5, -3]  # First to elements of the table
+    assert interpreter.table[:2] == [-5, -3]  # First two elements of the table
 
 
 def test_changing_values(interpreter):
@@ -108,14 +108,6 @@ def test_ascii_input(small_interpreter, input_char, char_value):
         assert small_interpreter.current_value == char_value
 
 
-def test_loop_adding(small_interpreter):
-    small_interpreter.interpret('+++[>++<-]')  # Adding 3 to first cell, then lopping until first cell is 0 and second is 6
-    assert small_interpreter.table[:2] == [0, 6]
-    small_interpreter.reset()
-    small_interpreter.interpret('+++[>++<-]>[>++<-]')
-    assert small_interpreter.table[:3] == [0, 0, 12]
-
-
 def test_interpreter_reset(small_interpreter):
     small_interpreter.interpret('+++>+++>+++')
     assert small_interpreter.table[:3] == [3, 3, 3]
@@ -123,6 +115,15 @@ def test_interpreter_reset(small_interpreter):
     assert small_interpreter.table[:3] == [0, 0, 0]
     small_interpreter.interpret('++>++>++')
     assert small_interpreter.table[:3] == [2, 2, 2]
+
+
+def test_loop_adding(small_interpreter):
+    # Adding 3 to the first cell, then lopping until first cell is 0 and second is 6
+    small_interpreter.interpret('+++[>++<-]')
+    assert small_interpreter.table[:2] == [0, 6]
+    small_interpreter.reset()
+    small_interpreter.interpret('+++[>++<-]>[>++<-]')
+    assert small_interpreter.table[:3] == [0, 0, 12]
 
 
 def test_interpreting_from_file(small_interpreter):
