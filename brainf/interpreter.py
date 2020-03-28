@@ -121,10 +121,12 @@ class InteractiveWrapper:
         self._display = InterpreterDisplay()
         self._special_cmd_map = {
             "reset": self.reset_interpreter,
-            "quit": self.stop_interactive
+            "quit": self.stop_interactive,
+            "undo": self.undo
         }
         self.exec_line = 0
         self.interactive_mode = False
+        self.prev_state = self._interpreter.table.copy(), self._interpreter.index
 
     def print_output(self, output):
         print(f"[Out {self.exec_line}]: {output}")
@@ -136,6 +138,10 @@ class InteractiveWrapper:
     def stop_interactive(self):
         print("\nINFO :: Quitting...")
         self.interactive_mode = False
+
+    def undo(self):
+        print("INFO :: Undoing previous command")
+        self._interpreter.table, self._interpreter.index = self.prev_state
 
     def start_interactive(self):
         self.interactive_mode = True
@@ -149,6 +155,7 @@ class InteractiveWrapper:
                 if bf_cmd in self._special_cmd_map:
                     self._special_cmd_map[bf_cmd]()
                 else:
+                    self.prev_state = self._interpreter.table.copy(), self._interpreter.index
                     out = self._interpreter.interpret(bf_cmd)
                 if out:
                     self.print_output(out)
