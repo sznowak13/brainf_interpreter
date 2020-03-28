@@ -1,7 +1,7 @@
 from unittest.mock import patch
 import pytest
 
-from brainf import Interpreter
+from brainf.interpreter import BrainFuckInterpreter
 
 
 def assert_file_is(string):
@@ -11,7 +11,7 @@ def assert_file_is(string):
 
 @pytest.mark.parametrize('table_size', [100, 10_000, 666, 456789])
 def test_interpreter_inits_with_a_proper_table(table_size):
-    i = Interpreter(table_size)
+    i = BrainFuckInterpreter(table_size)
     assert len(i.table) == table_size
     assert isinstance(i.table, list)
     assert all(e == 0 for e in i.table)
@@ -34,10 +34,10 @@ def test_interpreter_decrements_pointer(interpreter):
 
 
 def test_interpreter_increments_pointer_correctly_on_border_cases(interpreter):
-    # Interpreter from fixture has 100 cells in table.
+    # BrainFuckInterpreter from fixture has 100 cells in table.
     assert interpreter.index == 0
     interpreter.interpret('<')
-    assert interpreter.index == 100
+    assert interpreter.index == 99
     interpreter.interpret('>')
     assert interpreter.index == 0
 

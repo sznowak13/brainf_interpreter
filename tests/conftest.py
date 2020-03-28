@@ -1,18 +1,18 @@
 import pytest
 
-from brainf import Interpreter
+from brainf.interpreter import BrainFuckInterpreter
 
 
 @pytest.fixture
 def interpreter():
-    i = Interpreter(100)
+    i = BrainFuckInterpreter(100)
     i.set_file_out('tests/resources/brains_out.txt')
     return i
 
 
 @pytest.fixture
 def small_interpreter():
-    i = Interpreter(10)
+    i = BrainFuckInterpreter(10)
     i.set_file_out('tests/resources/brains_out.txt')
     return i
 

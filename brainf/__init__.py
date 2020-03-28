@@ -1,3 +1,3 @@
-from .interpreter import BrainFuckInterpreter
+from .interpreter import InteractiveWrapper
 
-Interpreter = BrainFuckInterpreter
+Interpreter = InteractiveWrapper

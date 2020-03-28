@@ -17,7 +17,9 @@ def main():
     brainf_i = Interpreter(args.size)
     if args.output:
         brainf_i.set_file_out(args.output)
-    if args.file != '.':
+    if args.file == '.':
+        brainf_i.start_interactive()
+    else:
         brainf_i.interpret_file(args.file)
 
 
