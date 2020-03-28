@@ -69,7 +69,11 @@ class BrainFuckInterpreter:
 
     def _get_value(self):
         inpt = get_input()
-        self.current_value = ord(inpt)
+        try:
+            self.current_value = ord(inpt)
+        except TypeError:
+            print("\nWARNING :: This command accepts only single characters, not strings. Adding only the first character.")
+            self.current_value = ord(inpt[0])
 
     def interpret(self, bf_text: str):
         printed_chars = []
