@@ -13,6 +13,7 @@ The `[` symbol checks the current pointer position and if the value is __not__ 0
 To interpret a file, just type in console:<br>
 `python brainf.py <path_to_bf>`<br>
 Where `<path_to_bf>` is path to a valid brainf*** program.
+In directory `brainfucks` there are some sample .bf programs that You can try out.
 
 <a href="https://ibb.co/rQpbn5X"><img src="https://i.ibb.co/vcds2LM/obraz.png" alt="obraz" border="0"></a>
 
