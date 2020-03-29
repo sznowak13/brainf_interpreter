@@ -1,7 +1,7 @@
 import os
 
 from brainf.display import InterpreterDisplay
-from brainf.utils import get_corresponding_closing_bracket_index
+from brainf.utils import get_corresponding_closing_bracket_index, getch
 
 
 def get_input():
@@ -9,7 +9,7 @@ def get_input():
     A function that can be mocked in tests.
     :return: input string
     """
-    return input()
+    return getch()
 
 
 class BrainFuckInterpreter:
